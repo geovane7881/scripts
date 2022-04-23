@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Procura e toca musicas do youtube no mpd
+
+search=$@
+info=$(youtube-dl --get-filename -o '%(id)s---%(title)s' "ytsearch:'$search'")
+id=$(echo $info | awk -F'---' '{print $1}')
+title=$(echo $info | awk -F'---' '{print $2}')
+sh ~/.scripts/music_player.sh --id="$id" --title="$title" -p
+

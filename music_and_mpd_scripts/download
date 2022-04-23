@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Script para baixar um vídeo do Youtube e adicionar ao servidor de audio MPD
+
+search=$@
+info=$(youtube-dl --get-filename -o '%(id)s---%(title)s' "ytsearch:'$search'")
+id=$(echo $info | awk -F'---' '{print $1}')
+title=$(echo $info | awk -F'---' '{print $2}')
+sh ~/.scripts/music_player.sh --id="$id" --title="$title"
+
+#mpc add "yt:http://www.youtube.com/watch?v=$id"
+sh ~/.scripts/music_player.sh --id=$id --download=true
+
+
+

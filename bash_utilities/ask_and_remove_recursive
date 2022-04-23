@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#script simples que pergunta por cada pasta que vai ser removida recursivamente
+#o comando -rvI não mostra os nomes das pastaaas
+
+for ((i=1;i<=$#;i++));
+do
+
+echo "Tem certeza de remover: ${!i} ?"
+read RES
+if [ "$RES" = "S" ] || [ "$RES" = "s" ] ; then
+    rm -rv "${!i}"
+else
+    echo "Cancelado"
+fi
+
+done;

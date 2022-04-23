@@ -1,0 +1,25 @@
+#!/bin/sh
+
+CHROME_DIR="/home/ge/.config/chromium/Default"
+
+url=$({
+    awk '{ tmp = $1; $1 = $2; $2 = tmp; print $0 }' "$QUTE_CONFIG_DIR"/quickmarks
+    #cat "$QUTE_CONFIG_DIR"/bookmarks/urls
+    #sqlite3 -separator ' ' "$QUTE_DATA_DIR"/history.sqlite 'SELECT url, title FROM CompletionHistory'
+    #sqlite3 -separator ' ' "$QUTE_DATA_DIR"/history.sqlite 'SELECT url, title FROM History'
+
+    #history items
+    sqlite3 -separator ' ' "$CHROME_DIR"/History 'SELECT url, title FROM urls order by last_visit_time DESC'
+} | rofi -threads 0 -width 90 -columns 1 -dmenu -i -p "History $* ") 
+
+
+if [ $? = 0 ] && [ -n "$url" ]; then
+
+    #se não for uma pesquisa deixar apenas o primeiro argumento (link)
+    if [[ $url == *"http"* ]]; then  
+        url=$(echo $url | cut -d ' ' -f 1)
+        chromium $url
+    fi
+
+    #printf 'open %s %s\n' "$*" "$url" >>"$QUTE_FIFO"
+fi

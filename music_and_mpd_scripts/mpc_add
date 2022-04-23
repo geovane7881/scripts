@@ -1,0 +1,40 @@
+#!/bin/bash
+
+#Script que reproduz, ou adiciona a playlist música 
+#recebe como argumentos título e autor e opção de reprodução
+#usando Mopidy como server de música (alternativa ao MPD)
+
+artist="$1"
+title="$2"
+play=$3
+
+echo "invocation command: $@" >> ~/.scripts/mpc.txt
+echo "received: $artist - $title" >> ~/.scripts/mpc.txt
+
+#procura a musica
+file=$(ls /home/ge/music/downloaded | grep -i "$artist" | grep -i "$title" | head -n 1)
+echo "local file: $file" >> ~/.scripts/mpc.txt
+
+
+artist=$(php -r "echo rawurlencode(\"$artist\");")
+title=$(php -r "echo rawurlencode(\"$title\");")
+file=$(php -r "echo rawurlencode(\"$file\");")
+prefix="file:///home/ge/music/downloaded/"
+file="${prefix}${file}"
+
+echo "parsed: $artist - $title" >> ~/.scripts/mpc.txt
+echo "parsed_file: $file" >> ~/.scripts/mpc.txt
+echo "play: $play" >> ~/.scripts/mpc.txt
+
+
+#reproduz agora
+if [ $play = true ]; then
+    #adiciona na fila
+    mpc insert "$file"
+    #ocultando saida
+    mpc next > /dev/null && mpc play > /dev/null
+
+else
+    #adiciona na playlist
+    mpc add "$file"
+fi

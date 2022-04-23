@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#toca vídeo do youtube no mpd
+#recebe como argumento a url do vídeo
+
+#recebe link ou id do youtube
+id=$(echo $1 | cut -d "=" -f 2)   
+#mpc add "yt:http://www.youtube.com/watch?v=$id"
+sh ~/.scripts/music_player.sh --id=$id -p=true
+
